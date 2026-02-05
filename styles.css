@@ -1,0 +1,24 @@
+.korean-translated-text {
+    /* background-color removed as per user request */
+    /* color removed to inherit page style */
+    cursor: help;
+    position: relative;
+    border-bottom: 1px dashed #4285f4;
+}
+
+.korean-translated-text:hover::after {
+    content: attr(data-original);
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #333;
+    color: white;
+    padding: 5px 10px;
+    border-radius: 4px;
+    font-size: 12px;
+    white-space: nowrap;
+    z-index: 10000;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    pointer-events: none;
+}
