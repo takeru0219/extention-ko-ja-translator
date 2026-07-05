@@ -1,3 +1,18 @@
+#kj-translator-status {
+    position: fixed;
+    right: 16px;
+    bottom: 16px;
+    background-color: rgba(30, 30, 30, 0.9);
+    color: white;
+    padding: 8px 14px;
+    border-radius: 6px;
+    font-size: 13px;
+    font-family: sans-serif;
+    z-index: 2147483647;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+    pointer-events: none;
+}
+
 .korean-translated-text {
     /* background-color removed as per user request */
     /* color removed to inherit page style */
