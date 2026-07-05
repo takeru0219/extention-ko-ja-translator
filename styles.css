@@ -17,23 +17,28 @@
     /* background-color removed as per user request */
     /* color removed to inherit page style */
     cursor: help;
-    position: relative;
     border-bottom: 1px dashed #4285f4;
 }
 
-.korean-translated-text:hover::after {
-    content: attr(data-original);
-    position: absolute;
-    bottom: 100%;
-    left: 50%;
-    transform: translateX(-50%);
+/* Original-text tooltip: a single fixed-position element managed by
+   content.js. A CSS ::after tooltip gets clipped by overflow:hidden
+   ancestors and cannot wrap within the viewport, so it is not used. */
+#kj-translator-tooltip {
+    position: fixed;
+    display: none;
+    max-width: min(480px, calc(100vw - 32px));
+    max-height: calc(100vh - 16px);
+    overflow: hidden;
     background-color: #333;
     color: white;
-    padding: 5px 10px;
+    padding: 6px 10px;
     border-radius: 4px;
     font-size: 12px;
-    white-space: nowrap;
-    z-index: 10000;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    line-height: 1.5;
+    font-family: sans-serif;
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+    z-index: 2147483647;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.25);
     pointer-events: none;
 }

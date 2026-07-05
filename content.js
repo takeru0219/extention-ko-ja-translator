@@ -283,6 +283,68 @@ function replaceNodeWithHover(textNode, originalText, translatedText) {
   span.setAttribute('data-original', originalText);
 
   textNode.parentNode.replaceChild(span, textNode);
+  ensureTooltipHandlers();
+}
+
+// --- Original-text tooltip ----------------------------------------------
+// One fixed-position element for the whole page, shown via delegated
+// hover events. Unlike the ::after approach it wraps long text, stays
+// inside the viewport, and cannot be clipped by overflow:hidden parents.
+
+let tooltipInitialized = false;
+
+function ensureTooltipHandlers() {
+  if (tooltipInitialized) return;
+  tooltipInitialized = true;
+
+  document.addEventListener('mouseover', (event) => {
+    const span = event.target.closest?.('.korean-translated-text');
+    if (span) showTooltip(span);
+  });
+  document.addEventListener('mouseout', (event) => {
+    const span = event.target.closest?.('.korean-translated-text');
+    if (span && !span.contains(event.relatedTarget)) hideTooltip();
+  });
+  // The anchor moves under the pointer while scrolling; just hide.
+  document.addEventListener('scroll', hideTooltip, true);
+}
+
+function showTooltip(span) {
+  const original = span.getAttribute('data-original');
+  if (!original) return;
+
+  let tip = document.getElementById('kj-translator-tooltip');
+  if (!tip) {
+    tip = document.createElement('div');
+    tip.id = 'kj-translator-tooltip';
+    document.body.appendChild(tip);
+  }
+  tip.textContent = original;
+
+  // Render invisibly first to measure, then position within the viewport
+  tip.style.visibility = 'hidden';
+  tip.style.display = 'block';
+  const anchor = span.getBoundingClientRect();
+  const tipRect = tip.getBoundingClientRect();
+  const margin = 8;
+
+  let left = anchor.left + anchor.width / 2 - tipRect.width / 2;
+  left = Math.max(margin, Math.min(left, window.innerWidth - tipRect.width - margin));
+
+  let top = anchor.top - tipRect.height - 6;      // prefer above
+  if (top < margin) top = anchor.bottom + 6;      // flip below
+  if (top + tipRect.height > window.innerHeight - margin) {
+    top = Math.max(margin, window.innerHeight - tipRect.height - margin);
+  }
+
+  tip.style.left = `${left}px`;
+  tip.style.top = `${top}px`;
+  tip.style.visibility = 'visible';
+}
+
+function hideTooltip() {
+  const tip = document.getElementById('kj-translator-tooltip');
+  if (tip) tip.style.display = 'none';
 }
 
 // --- Rate limiting -----------------------------------------------------
